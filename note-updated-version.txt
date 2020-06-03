@@ -1,0 +1,9 @@
+This version of the expensify app was updated from the course source from lesson 110 on filtering dates 
+because I could not get the dateRangePicker to display in my original code.  My original code is located
+in the "expensify-app-my-original" folder.  The files in this folder contain all my notes in comments.
+
+This version was started from "r-13-13-date-filters.zip".  Did a npm install.  Had to update node-sass
+to account for my updated node.js install.  I then had to update react and react-dom to the latest.
+The app worked after that.
+
+

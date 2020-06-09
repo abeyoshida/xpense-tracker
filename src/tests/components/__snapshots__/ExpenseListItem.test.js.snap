@@ -8,7 +8,9 @@ exports[`render an ExpenseListItem from expensesDummy 1`] = `
     <h3 />
   </[object Object]>
   <p>
+    $0.00
      - 
+    December 31st 1969
   </p>
 </div>
 `;

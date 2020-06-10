@@ -13,7 +13,11 @@ class ExpensesSummaryTotal extends React.Component {
         return (
             <div>
                 {
-                    (this.props.expensesCount === 0) ? <p>There are no expenses</p> : <p>The total amount of your expenses: {this.props.expensesTotal}</p>
+                    (this.props.expensesCount === 0) 
+                    ? 
+                    <p>There are no expenses</p> 
+                    : 
+                    <p>The total amount of your expenses: {this.props.expensesTotal}</p>
                 }
                 
             </div>

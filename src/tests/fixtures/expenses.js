@@ -22,5 +22,6 @@ const expensesDummy = [
         amount: 5000,
         createdAt: moment(0).add(4, 'days').valueOf()
     }
+    // total = 105225
 ];
 export default expensesDummy;

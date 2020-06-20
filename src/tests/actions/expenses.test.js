@@ -1,4 +1,10 @@
-import { addExpense, removeExpense, editExpense } from '../../actions/expenses';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+import { startAddExpense, addExpense, removeExpense, editExpense } from '../../actions/expenses';
+import expensesDummy from '../fixtures/expenses';
+import fdb from '../../firebase/firebase';
+
+const createMockStore = configureMockStore([thunk]);
 
 // test removeExpense action generator
 // you need to pass in an id and get back an object
@@ -31,35 +37,66 @@ test('should setup up remove expense action object', () => {
     });
  });
 
- // test addExpense action generator
- // pass in expense object and account for the dynamic id number
- // use expect.any() and determine the type expected instead of the value
- test('should setup add expense action object with dyanmic id', () => {
-    const expenseData = {amount: 10000, createdAt: 10000, description: 'Rent', note: 'edit Rent expense' };
-    const actionResult = addExpense(expenseData);
-    expect(actionResult).toEqual({
-        type: 'ADD_EXPENSE',
-        expense: {
-            ...expenseData,
-            id: expect.any(String)
-        }
+ // test addExpense with provided data
+ test('should setup add expense action object with provided values', () => {
+    const actionResult = addExpense(expensesDummy[2]);
+     expect(actionResult).toEqual({
+         type: 'ADD_EXPENSE',
+         expense: expensesDummy[2]
+     });
+ });
+
+ // Jest needs to be told when testing an asynchonous process 
+ // startAddExpense makes a call to the Firebase database so
+ // done needs to be passed into test so it will wait until 
+ // Firebase returns a result
+ test('add expense to database and store', (done) => {
+    const store = createMockStore({});
+    const expenseData = {
+        description: 'Mouse',
+        amount: 3000,
+        note: 'This one is gooder',
+        createdAt: 1000
+    }
+    store.dispatch(startAddExpense(expenseData)).then(() => {
+        const actions = store.getActions();
+        expect(actions[0]).toEqual({
+            type: 'ADD_EXPENSE',
+            expense: {
+                id: expect.any(String),
+                ...expenseData
+            }
+        });
+
+        return fdb.ref(`expenses/${actions[0].expense.id}`).once('value');
+    }).then((snapshot) => {
+        expect(snapshot.val()).toEqual(expenseData);
+        done();
     });
  });
 
- // test addExpense with no data
- test('should setup add expense action object with no data', () => {
-    const expenseData = {
+ test('add expense with defaults to database and store', (done) => {
+    const store = createMockStore({});
+    const expenseDefaultData = {
         description: '',
-        note: '',
         amount: 0,
+        note: '',
         createdAt: 0
-      } 
-    const actionResult = addExpense();
-     expect(actionResult).toEqual({
-         type: 'ADD_EXPENSE',
-         expense: {
-             ...expenseData,
-             id: expect.any(String)
-         }
-     });
+    }
+    store.dispatch(startAddExpense()).then(() => {
+        const actions = store.getActions();
+        expect(actions[0]).toEqual({
+            type: 'ADD_EXPENSE',
+            expense: {
+                id: expect.any(String),
+                ...expenseDefaultData
+            }
+        });
+
+        return fdb.ref(`expenses/${actions[0].expense.id}`).once('value');
+    }).then((snapshot) => {
+        console.log('snapshot.val(): ', snapshot.val());
+        expect(snapshot.val()).toEqual(expenseDefaultData);
+        done();
+    });
  });

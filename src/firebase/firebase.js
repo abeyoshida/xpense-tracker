@@ -16,32 +16,3 @@ const firebaseConfig = {
   firebase.initializeApp(firebaseConfig);
   const fdb = firebase.database();
   export { firebase, fdb as default};
-
-
-  /****************************************
-
-<!-- The core Firebase JS SDK is always required and must be listed first -->
-<script src="https://www.gstatic.com/firebasejs/7.15.0/firebase-app.js"></script>
-
-<!-- TODO: Add SDKs for Firebase products that you want to use
-     https://firebase.google.com/docs/web/setup#available-libraries -->
-<script src="https://www.gstatic.com/firebasejs/7.15.0/firebase-analytics.js"></script>
-
-<script>
-  // Your web app's Firebase configuration
-  var firebaseConfig = {
-    apiKey: "AIzaSyCEMeKJtfQpFbAS-OLZgAlc8e-xqnAdCPg",
-    authDomain: "expensify-e8c07.firebaseapp.com",
-    databaseURL: "https://expensify-e8c07.firebaseio.com",
-    projectId: "expensify-e8c07",
-    storageBucket: "expensify-e8c07.appspot.com",
-    messagingSenderId: "366366138555",
-    appId: "1:366366138555:web:edeab1510ac1f5f307499e",
-    measurementId: "G-Z7MJ5K4DTF"
-  };
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  firebase.analytics();
-</script>
-
-******************************************/

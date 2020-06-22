@@ -61,4 +61,25 @@ export const setExpenses = (expenses) => ({
   expenses
 });
 
-// const startSetExpenses;
+export const startSetExpenses = () => {
+  // fetch all expense data once from firebase
+  // parse the data into an array
+  // dispatch setExpenses
+  
+  return (dispatch) => {
+    return fdb.ref('expenses')
+      .once('value')
+      .then((snapshot) => {
+          const expenses = [];
+          snapshot.forEach((childSnapshot) => {
+            expenses.push({
+              id: childSnapshot.key,
+              ...childSnapshot.val()
+            });
+          });
+          console.log(expenses);
+          dispatch(setExpenses(expenses));
+    });
+  };
+  
+};

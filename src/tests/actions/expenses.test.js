@@ -1,10 +1,18 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { startAddExpense, addExpense, removeExpense, editExpense } from '../../actions/expenses';
+import { startAddExpense, addExpense, removeExpense, editExpense, setExpenses } from '../../actions/expenses';
 import expensesDummy from '../fixtures/expenses';
 import fdb from '../../firebase/firebase';
 
 const createMockStore = configureMockStore([thunk]);
+
+beforeEach((done) => {
+    const expensesData = {};
+    expensesDummy.forEach(( {id, description, note, amount, createdAt} ) => {
+        expensesData[id] = {description, note, amount, createdAt};
+    });
+    fdb.ref('expenses').set(expensesData).then(() => done());
+});
 
 // test removeExpense action generator
 // you need to pass in an id and get back an object
@@ -99,4 +107,12 @@ test('should setup up remove expense action object', () => {
         expect(snapshot.val()).toEqual(expenseDefaultData);
         done();
     });
+ });
+
+ test('setup set expense action object with data', () => {
+    const action = setExpenses(expensesDummy);
+    expect(action).toEqual({
+        type: 'SET_EXPENSES',
+        expenses: expensesDummy
+    })
  });

@@ -5,6 +5,7 @@ import {
     addExpense, 
     removeExpense, 
     editExpense, 
+    startEditExpense,
     setExpenses, 
     startSetExpenses, 
     startRemoveExpense 
@@ -41,7 +42,6 @@ test('remove expense from firebase', (done) => {
             type: 'REMOVE_EXPENSE',
             id
         });
-        console.log('expenses.test.js id: ', id);
         return fdb.ref(`expenses/${id}`).once('value');
     }).then((snapshot) => {
         expect(snapshot.val()).toBeFalsy();
@@ -65,8 +65,26 @@ test('remove expense from firebase', (done) => {
     const actionResult = editExpense(id, updates);
     expect(actionResult).toEqual({
         type: 'EDIT_EXPENSE',
-        id: id,
-        updates: updates
+        id,
+        updates
+    });
+ });
+
+ test('edit expense in database and store', (done) => {
+    const store = createMockStore({});
+    const id = expensesDummy[1].id;
+    const updates = { note: 'edit Rent expense' };
+    store.dispatch(startEditExpense(id, updates)).then(() => {
+        const actions = store.getActions();
+        expect(actions[0]).toEqual({
+            type: 'EDIT_EXPENSE',
+            id,
+            updates
+        });
+        return fdb.ref(`expenses/${id}`).once('value');
+    }).then((snapshot) => {
+        expect(snapshot.val().note).toBe('edit Rent expense');
+        done();
     });
  });
 

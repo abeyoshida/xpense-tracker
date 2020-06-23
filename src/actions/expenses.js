@@ -45,6 +45,14 @@ export const removeExpense = ({ id } = {}) => ({
   id
 });
 
+export const startRemoveExpense = ({ id }) => {
+  return (dispatch) => {
+    return fdb.ref(`expenses/${id}`).remove().then(() => {
+      dispatch(removeExpense({ id }));
+    });
+  };
+};
+
 // EDIT_EXPENSE
 export const editExpense = (id, updates) => {
   //console.log('/actions/expenses.js editExpense updates: ', updates);
@@ -77,7 +85,7 @@ export const startSetExpenses = () => {
               ...childSnapshot.val()
             });
           });
-          console.log(expenses);
+          // console.log(expenses);
           dispatch(setExpenses(expenses));
     });
   };

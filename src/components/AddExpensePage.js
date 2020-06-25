@@ -7,7 +7,7 @@ export class AddExpensePage extends React.Component {
   
   onSubmit = (expense) => {
     this.props.startAddExpense(expense);  // this will dispatch the addExpense call with the expense argument
-    this.props.history.push('/');
+    this.props.history.push('/dashboard');
   };
   render() {
     return (

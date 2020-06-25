@@ -18,12 +18,6 @@ exports[`render Header correctly 1`] = `
   >
     Create Expense
   </[object Object]>
-  <[object Object]
-    activeClassName="is-active"
-    to="/help"
-  >
-    Help
-  </[object Object]>
   <button
     onClick={[Function]}
   >

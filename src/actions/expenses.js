@@ -1,18 +1,6 @@
 import uuid from 'uuid';
 import fdb from '../firebase/firebase';
 
-/*******present structure*********/
-// component calls action generator
-// action generator returns an object
-// component dispatches the object
-// redux store changes after running a reducer
-
-/*******new structure to add firebase call ************/
-// component calls action generator
-// action generator returns a function
-// component dispatches function (?)
-// function runs -- has the ability to dispatch other actions and do whatever it wants
-
 // ADD_EXPENSE
 export const addExpense = (expense) => ({
   type: 'ADD_EXPENSE',
@@ -21,7 +9,8 @@ export const addExpense = (expense) => ({
 
 // this function will update firebase then dispatch an object to update the redux store
 export const startAddExpense = (expenseData = {}) => {
-  return (dispatch) => {
+  return (dispatch, getState) => {
+    const uid = getState().auth.uid;
     const {
       description = '',
       note = '',
@@ -30,7 +19,7 @@ export const startAddExpense = (expenseData = {}) => {
     } = expenseData;
     const expense = { description, note, amount, createdAt };
 
-    return fdb.ref('expenses').push(expense).then((ref) => {
+    return fdb.ref(`users/${uid}/expenses`).push(expense).then((ref) => {
       dispatch(addExpense({
         id: ref.key,
         ...expense
@@ -46,8 +35,9 @@ export const removeExpense = ({ id } = {}) => ({
 });
 
 export const startRemoveExpense = ({ id }) => {
-  return (dispatch) => {
-    return fdb.ref(`expenses/${id}`).remove().then(() => {
+  return (dispatch, getState) => {
+    const uid = getState().auth.uid;
+    return fdb.ref(`users/${uid}/expenses/${id}`).remove().then(() => {
       dispatch(removeExpense({ id }));
     });
   };
@@ -64,8 +54,9 @@ export const editExpense = (id, updates) => {
 };
 
 export const startEditExpense = (id, updates) => {
-  return (dispatch) => {
-    return fdb.ref(`expenses/${id}`).update(updates).then(() => {
+  return (dispatch, getState) => {
+    const uid = getState().auth.uid;
+    return fdb.ref(`users/${uid}/expenses/${id}`).update(updates).then(() => {
       dispatch(editExpense(id, updates));
     });
   };
@@ -78,12 +69,9 @@ export const setExpenses = (expenses) => ({
 });
 
 export const startSetExpenses = () => {
-  // fetch all expense data once from firebase
-  // parse the data into an array
-  // dispatch setExpenses
-  
-  return (dispatch) => {
-    return fdb.ref('expenses')
+  return (dispatch, getState) => {
+    const uid = getState().auth.uid;
+    return fdb.ref(`users/${uid}/expenses`)
       .once('value')
       .then((snapshot) => {
           const expenses = [];

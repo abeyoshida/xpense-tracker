@@ -5,7 +5,6 @@ import AppRouter, { history } from './routers/AppRouter';
 import configureStore from './store/configureStore';
 import { startSetExpenses } from './actions/expenses';
 import { login, logout } from './actions/auth';
-import getVisibleExpenses from './selectors/expenses';
 import 'normalize.css/normalize.css';
 import './styles/styles.scss';
 import 'react-dates/lib/css/_datepicker.css';
@@ -26,10 +25,8 @@ const renderApp = () => {
 };
 ReactDOM.render(<p>Loading...</p>, document.getElementById('app'));
 
-// console.log('app.js firebase.auth(): ', firebase.auth());
 firebase.auth().onAuthStateChanged((user) => {
   if (user) {
-    console.log('user is logged in');
     store.dispatch(login(user.uid));
     store.dispatch(startSetExpenses()).then(() => {
       renderApp();
@@ -38,7 +35,6 @@ firebase.auth().onAuthStateChanged((user) => {
       }
     });
   } else {
-    console.log('user is logged out');
     store.dispatch(logout());
     renderApp();
     history.push('/');

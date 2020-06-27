@@ -7,13 +7,13 @@ const ExpenseListItem = ({ id, description, amount, createdAt }) => {
   const createdAtSafe = moment(createdAt).format("MMMM Do YYYY");
   const amountSafe = numeral(amount/100).format('$0,0.00');
   return (
+    <Link className="list-item" to={`/edit/${id}`}>
       <div>
-        <Link to={`/edit/${id}`}>
-          <h3>{description}</h3>
-        </Link>
-        {/*<p>{amount} - {createdAt}</p>*/}
-        <p>{amountSafe} - {createdAtSafe}</p>
+      <h3 className="list-item__title">{description}</h3>
+      <span className="list-item__sub-title">{createdAtSafe}</span>
       </div>
-    );
+      <h3 className="list-item__data">{amountSafe}</h3>
+    </Link>
+  );
 }
 export default ExpenseListItem;
